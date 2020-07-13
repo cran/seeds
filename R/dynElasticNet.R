@@ -1,6 +1,6 @@
 #' estimating the optimal control using the dynamic elastic net
 #'
-#' @param alphaStep starting value of the stepsize for the gradient descent, will be calculate to minimize the costfunction by backtracking algorithm
+#' @param alphaStep starting value of the stepsize for the gradient descent, will be calculate to minimize the cost function by backtracking algorithm
 #' @param armijoBeta  scaling of the alphaStep to find a approximately optimal value for the stepsize
 #' @param x0 initial state of the ode system
 #' @param parameters parameters of the ODE-system
@@ -11,7 +11,7 @@
 #' @param modelFunc function that describes the ODE-system of the model
 #' @param measFunc function that maps the states to the outputs
 #' @param optW vector that indicated at which knots of the network the algorithm should estimate the hidden inputs
-#' @param origAUC AUCs of the first optimisation; only used by the algorithm
+#' @param origAUC AUCs of the first optimization; only used by the algorithm
 #' @param plotEsti boolean that controls of the current estimates should be plotted
 #' @param modelInput an dataset that describes the external input of the system
 #' @param conjGrad boolean that indicates the usage of conjugate gradient method over the normal steepest descent
@@ -21,8 +21,8 @@
 #' @param nnStates a bit vector indicating the states that should be non negative
 #' @param verbose Boolean indicating if an output in the console should be created to display the gradient descent steps
 #'
-#' @return A list containing the estimated hidden inputs, the AUCs, the estimated states and resulting measurements and the costfunction
-dynElasticNet <- function(alphaStep, armijoBeta, x0, parameters, alpha1, alpha2, measData, constStr,
+#' @return A list containing the estimated hidden inputs, the AUCs, the estimated states and resulting measurements and the cost function
+optimal_control_gradient_descent <- function(alphaStep, armijoBeta, x0, parameters, alpha1, alpha2, measData, constStr,
                           SD, modelFunc, measFunc, modelInput, optW, origAUC, maxIteration, plotEsti, conjGrad, eps, nnStates, verbose) {
   
   if (.Platform$OS.type != "windows"){
@@ -207,12 +207,13 @@ dynElasticNet <- function(alphaStep, armijoBeta, x0, parameters, alpha1, alpha2,
   #             1     a measurement function is given
   #             2     if no function is given all states are considered observable
   getMeassures <- function(x, measFunc) {
-    if (missing(measFunc)) {
+    if (isTRUE(all.equal(measFunc, function(x) { }))) {
       message('No meassurement function defined. Assuming all states are observable.')
-      y <- x[, -1, drop = FALSE]
+      y = x[, -1, drop = FALSE]
     } else {
       y = measFunc(x[, -1, drop = FALSE])
     }
+    
     y = as.data.frame(cbind(x[, 1], y))
     names(y)[1] <- 't'
     names(y)[-1] <- paste0(rep("y", ncol(y) - 1), 1:(ncol(y) - 1))
@@ -499,11 +500,14 @@ dynElasticNet <- function(alphaStep, armijoBeta, x0, parameters, alpha1, alpha2,
       wCost$L1 = wCost$L1 + sum(abs(w[, i]))
       wCost$L2 = wCost$L2 + sum(abs(w[, i] ^ 2))
     }
-
+    
     #combining the costs
-    cost = sum(yCost$Start) + sum(yCost$Middle) + sum(yCost$End) + alphaDynNet$a1 * wCost$L1 + alphaDynNet$a2 * wCost$L2
+    cost = sum(unlist(yCost$Start)) + sum(unlist(yCost$Middle)) + sum(unlist(yCost$End)) + alphaDynNet$a1 * wCost$L1 + alphaDynNet$a2 * wCost$L2
     return(cost)
   }
+  
+  # print(solNominal)
+  # print(measFunc)
 
   yHat <- getMeassures(solNominal, measFunc)
   yNominal <- apply(X = yHat[, -1, drop = FALSE], MARGIN = 2, FUN = function(x) stats::approxfun(x = yHat[, 1], y = x, rule = 2, method = 'linear'))

@@ -1,9 +1,9 @@
 #' Greedy method for estimating a sparse solution
 #'
-#' The sparse gradient dynamic elastic net calculates controls based on a first optimisation with gradient descent. IT should 
+#' The sparse gradient dynamic elastic net calculates controls based on a first optimization with gradient descent. IT should 
 #' result in a sparse vector of hidden inputs. These hidden inputs try to minimize the discrepancy between a given model and the taken measurements.
 #' 
-#' This algorithm usses a greedy approach to calculate the hidden inputs. Starting with a first estimation of the hidden inputs
+#' This algorithm uses a greedy approach to calculate the hidden inputs. Starting with a first estimation of the hidden inputs
 #' the algorithm tries to optimize set of hidden inputs based on the area under the curve from the first run. The algorithm stops 
 #' if a set of hidden gives a lower cost than a set with additional hidden inputs. 
 #' 
@@ -62,13 +62,12 @@
 #' \donttest{
 #' data(uvbModel)
 #' 
-#' results <- sgdn(odeModel = uvbModel, alphaStep = 500, alpha2 = 0.0001,
+#' results <- DEN(odeModel = uvbModel, alphaStep = 500, alpha2 = 0.0001,
 #'                 epsilon = 0.2, plotEstimates = TRUE)
-#' 
 #' }
-#'
+#' 
 #' @export
-sgdn <- function(odeModel, alphaStep, Beta, alpha1, alpha2, x0, optW, measFunc, measData, sd, epsilon,
+DEN <- function(odeModel, alphaStep, Beta, alpha1, alpha2, x0, optW, measFunc, measData, sd, epsilon,
                            parameters, systemInput, modelFunc, greedyLogical, plotEstimates, conjGrad, cString, nnStates, verbose) {
   
   if (missing(verbose)) {
@@ -231,7 +230,7 @@ sgdn <- function(odeModel, alphaStep, Beta, alpha1, alpha2, x0, optW, measFunc, 
   iter <- (sum(optW))
 
   
-  results <- dynElasticNet(alphaStep = alphaStep, armijoBeta = Beta, x0 = x0, optW = optW, eps = epsilon,
+  results <- optimal_control_gradient_descent(alphaStep = alphaStep, armijoBeta = Beta, x0 = x0, optW = optW, eps = epsilon,
                              measFunc = measFunc, measData = measData, SD = sd,
                              alpha1 = alpha1, alpha2 = alpha2, constStr = cString,
                              parameters = parameters, modelFunc = modelFunc, plotEsti = plotEstimates,
@@ -258,7 +257,7 @@ sgdn <- function(odeModel, alphaStep, Beta, alpha1, alpha2, x0, optW, measFunc, 
         cat(which(optW > 0))
       }
       optWs[[i]] <- optW
-      resAlg[[i]] <- dynElasticNet(alphaStep = alphaStep, armijoBeta = Beta, alpha1 = alpha1, alpha2 = alpha2, x0 = x0, optW = optW, eps = epsilon,
+      resAlg[[i]] <- optimal_control_gradient_descent(alphaStep = alphaStep, armijoBeta = Beta, alpha1 = alpha1, alpha2 = alpha2, x0 = x0, optW = optW, eps = epsilon,
                                    measFunc = measFunc, measData = measData, SD = sd, modelInput = systemInput, constStr = cString,
                                    parameters = parameters, modelFunc = modelFunc, origAUC = orgAUC, plotEsti = plotEstimates, conjGrad = conjGrad, nnStates = nnStates, verbose = verbose)
 

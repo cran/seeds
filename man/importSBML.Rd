@@ -11,7 +11,7 @@ importSBML(filename, times, meas_input)
 
 \item{times}{timestep at which the function should be evaluated}
 
-\item{meas_input}{measurements have to be given in order to analyse the data}
+\item{meas_input}{measurements have to be given in order to analyze the data}
 }
 \value{
 returns a odeModel object
@@ -21,7 +21,7 @@ A simple function for importing sbml models from a extensive markup language fil
 }
 \examples{
 
-\donttest{ 
+\dontrun{ 
 
 t <- uvbData[,1]
 y <- uvbData[,1:3]

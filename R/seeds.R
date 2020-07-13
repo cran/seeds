@@ -1,6 +1,6 @@
 #' @details Details
 #' 
-#' The first algorithm (SGDN) calculates the needed equations using the \code{\link{Deriv}}
+#' The first algorithm (DEN) calculates the needed equations using the \code{\link{Deriv}}
 #' function of the \pkg{Deriv} package. The process is implemented through the use
 #' of the S4 class \code{\link{odeEquations-class}}. 
 #' 
@@ -15,7 +15,7 @@
 #' examples and documentation given for the functions.
 #' 
 #' The second algorithm is called Bayesian Dynamic Elastic Net (BDEN).
-#' The BDEN as a new and fully probabilistic approach, supports the modeller in an 
+#' The BDEN as a new and fully probabilistic approach, supports the modeler in an 
 #' algorithmic manner to identify possible sources of errors in ODE based models on 
 #' the basis of experimental data.  THE BDEN does not require pre-specified hyper-parameters. 
 #' BDEN thus provides a systematic Bayesian computational method to identify target nodes and 
@@ -24,7 +24,7 @@
 #' based systems even with uncertain knowledge and noisy data. 
 #' 
 #' \describe{
-#'    \item{\code{\link[seeds]{sgdn}}}{a greedy algorithm to calculate a sparse control}
+#'    \item{\code{\link[seeds]{DEN}}}{a greedy algorithm to calculate a sparse control}
 #'    \item{\code{\link[seeds]{BDEN}}}{a basian mcmc approach}
 #' }
 #' 
